@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website-Betreuung Preisübersicht</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <style>
+        @font-face { font-family: 'Geist Mono'; src: url('https://cdn.jsdelivr.net/npm/geist@1.2.0/dist/fonts/geist-mono/GeistMono-Regular.woff2') format('woff2'); font-weight: 400; }
+        @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+        @font-face { font-family: 'Geist'; src: url('https://cdn.jsdelivr.net/npm/geist@1.2.0/dist/fonts/geist-sans/Geist-Regular.woff2') format('woff2'); font-weight: 400; }
+        @font-face { font-family: 'Geist'; src: url('https://cdn.jsdelivr.net/npm/geist@1.2.0/dist/fonts/geist-sans/Geist-Medium.woff2') format('woff2'); font-weight: 500; }
+        @font-face { font-family: 'Geist'; src: url('https://cdn.jsdelivr.net/npm/geist@1.2.0/dist/fonts/geist-sans/Geist-SemiBold.woff2') format('woff2'); font-weight: 600; }
+        @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif; background: #111111; padding: 0; color: #e0e0e0; -webkit-font-smoothing: antialiased; min-height: 100vh; overflow-x: hidden; }
+        .page-wrapper { position: relative; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+        .v-line { position: absolute; width: 1px; pointer-events: none; z-index: 2; background: rgba(255,255,255,0.10); }
+        .v-line.left { left: -12px; } .v-line.right { right: -12px; }
+        .v-line-dashed { position: absolute; width: 1px; pointer-events: none; z-index: 2; background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.10) 0px, rgba(255,255,255,0.10) 4px, transparent 4px, transparent 10px); }
+        .v-line-dashed.left { left: -76px; } .v-line-dashed.right { right: -76px; }
+
+        .container { position: relative; padding: 56px 0 0; }
+        h1 { font-family: 'Anton', sans-serif; text-align: center; font-size: 48px; color: #ffffff; font-weight: 400; letter-spacing: -0.03em; text-transform: uppercase; line-height: 1.1; }
+        .h-divider { position: relative; left: 50%; transform: translateX(-50%); width: 100vw; height: 1px; background: rgba(255,255,255,0.10); }
+        .h-divider.top { margin: 48px 0 40px 0; } .h-divider.bottom { margin: 40px 0 0 0; }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        thead th { padding: 20px 16px 24px; text-align: left; font-family: 'Geist Mono', monospace; font-weight: 400; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; background: transparent; vertical-align: top; border: none; }
+        thead th.price { text-align: center; font-size: 13px; color: #fff; letter-spacing: 0.5px; width: 200px; }
+        thead th.price .plan-name { display: block; font-size: 15px; font-weight: 400; margin-bottom: 6px; letter-spacing: 1.5px; }
+        thead th.price .plan-sub { display: block; font-size: 11px; font-weight: 400; color: #555; letter-spacing: 0.5px; line-height: 1.4; font-family: 'Geist', sans-serif; text-transform: none; }
+        thead th.price-ohne .plan-name { color: #555; }
+        thead th.hl-head { background: rgba(255,240,0,0.06); border-top: 1px solid rgba(255,240,0,0.18); border-left: 1px solid rgba(255,240,0,0.18); border-right: 1px solid rgba(255,240,0,0.18); border-top-left-radius: 4px; border-top-right-radius: 4px; }
+        thead th.hl-head .plan-name { color: #fff000; }
+        td.hl { background: rgba(255,240,0,0.04) !important; border-left: 1px solid rgba(255,240,0,0.18) !important; border-right: 1px solid rgba(255,240,0,0.18) !important; }
+        tbody tr:last-child td.hl { border-bottom: 1px solid rgba(255,240,0,0.18) !important; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; }
+        tr:hover:not(.category) td.hl { background: rgba(255,240,0,0.07) !important; }
+        
+        td { padding: 18px 16px; border-bottom: none; font-size: 14px; font-weight: 400; color: #999; position: relative; }
+        td:first-child { font-weight: 500; color: #bbb; }
+        td.center { text-align: center; font-size: 16px; }
+        td.check { color: #fff; } td.cross { color: #333; } td.dash { color: #333; }
+        tbody tr:not(.category):not(:last-child) td { border-bottom: 1px solid rgba(255,255,255,0.06); }
+        tbody tr:not(.category):not(:last-child) td:first-child { border-bottom: none; }
+        tbody tr:not(.category):not(:last-child) td:first-child::after { content: ''; position: absolute; bottom: 0; left: 16px; right: 0; height: 1px; background: rgba(255,255,255,0.06); }
+        tbody tr:not(.category):not(:last-child) td:last-child { border-bottom: none; }
+        tbody tr:not(.category):not(:last-child) td:last-child::after { content: ''; position: absolute; bottom: 0; left: 0; right: 16px; height: 1px; background: rgba(255,255,255,0.06); }
+
+        tr.category td { font-family: 'Geist Mono', monospace; background: transparent; font-weight: 400; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; color: #fff000; padding-top: 32px; padding-bottom: 14px; border-bottom: none; cursor: pointer; user-select: none; }
+        tr.category td.cat-empty { color: transparent; cursor: default; }
+        .cat-flex { display: inline-flex; align-items: center; gap: 6px; }
+        .chevron-icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.25s ease; }
+        .chevron-icon svg { width: 10px; height: 10px; stroke: #fff000; fill: none; stroke-width: 2.5; }
+        tr.category:not(.collapsed) .chevron-icon { transform: rotate(180deg); }
+        tr.category.collapsed .chevron-icon { transform: rotate(0deg); }
+        .content-row.hidden { display: none; }
+        tr:hover:not(.category) td:not(.hl) { background: rgba(255,255,255,0.02); }
+
+        td.detail-value { text-align: center; font-family: 'Geist Mono', monospace; font-size: 13px; color: #666; letter-spacing: 0.5px; }
+        td.detail-value.hl { color: #ccc; } td.detail-value.detail-full { color: #ccc; }
+        .detail-price-suffix { display: block; font-size: 9px; color: #555; letter-spacing: 1.5px; margin-top: 2px; text-transform: uppercase; }
+        td.detail-value.hl .detail-price-suffix, td.detail-value.detail-full .detail-price-suffix { color: #888; }
+        .info-wrap { display: inline-flex; align-items: center; gap: 6px; }
+        .info-badge { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; cursor: help; flex-shrink: 0; }
+        .info-badge svg { width: 16px; height: 16px; stroke: #444; fill: none; stroke-width: 1.5; }
+        .info-badge:hover svg { stroke: #888; }
+        .info-badge .tooltip { position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); background: #1e1e1e; color: #bbb; padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 400; line-height: 1.5; width: 260px; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 10; border: 1px solid #2a2a2a; text-align: left; }
+        .info-badge .tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #1e1e1e; }
+        .info-badge:hover .tooltip { opacity: 1; }
+        .caps { text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ========== FAQ ========== */
+        .faq-section { padding: 56px 0 0; }
+        .faq-title { font-family: 'Geist Mono', monospace; font-size: 18px; font-weight: 400; color: #fff; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px; text-align: center; }
+
+        .faq-grid-outer {
+            margin-left: -32px;
+            margin-right: -32px;
+            position: relative;
+        }
+
+        /* Top border */
+        .faq-grid-outer::before { content: ''; display: block; height: 1px; background: rgba(255,255,255,0.06); }
+        /* Bottom border */
+        .faq-grid-outer::after { content: ''; display: block; height: 1px; background: rgba(255,255,255,0.06); }
+
+        .faq-row { display: grid; grid-template-columns: 1fr 1fr; position: relative; }
+
+        /* Vertical center line per row — will be managed by JS to stretch full height */
+        .faq-v-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(255,255,255,0.06);
+            pointer-events: none;
+        }
+
+        .faq-row-divider { height: 1px; background: rgba(255,255,255,0.06); }
+
+        .faq-item { padding: 28px 32px; cursor: pointer; user-select: none; }
+        .faq-question { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+        .faq-question span { font-size: 14px; color: #bbb; font-weight: 500; line-height: 1.4; }
+        .faq-question:hover span { color: #fff; }
+        .faq-toggle { display: flex; align-items: center; justify-content: center; width: 14px; height: 14px; flex-shrink: 0; margin-top: 3px; transition: transform 0.25s ease; }
+        .faq-toggle svg { width: 12px; height: 12px; stroke: #666; fill: none; stroke-width: 2; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-item.open .faq-toggle svg { stroke: #fff000; }
+        .faq-answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s ease; }
+        .faq-item.open .faq-answer { grid-template-rows: 1fr; }
+        .faq-answer-inner { overflow: hidden; }
+        .faq-answer-text { padding-top: 16px; font-size: 13px; line-height: 1.7; color: #777; }
+
+        /* ========== Footer ========== */
+        .footer-divider {
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
+            height: 1px;
+            background: rgba(255,255,255,0.06);
+            margin-top: 56px;
+        }
+        .site-footer { padding: 32px 0 48px; display: flex; align-items: center; justify-content: space-between; }
+        .footer-links { display: flex; gap: 24px; }
+        .footer-links a { font-size: 12px; color: #555; text-decoration: none; letter-spacing: 0.5px; transition: color 0.2s ease; }
+        .footer-links a:hover { color: #999; }
+        .footer-copy { font-size: 12px; color: #333; font-family: 'Geist Mono', monospace; letter-spacing: 0.5px; }
+
+        @media (min-width: 1200px) { thead th.price { width: 220px; } td.center, td.detail-value { min-width: 220px; } }
+        @media print { body { background: white; color: #111; } .v-line, .v-line-dashed { display: none; } }
+        @media (max-width: 768px) {
+            .page-wrapper { padding: 0 16px; }
+            .v-line { display: none; }
+            .v-line-dashed { display: none; }
+
+            h1 { font-size: 32px; letter-spacing: -0.02em; }
+            .h-divider.top { margin: 32px 0 24px 0; }
+
+            /* Horizontal scroll wrapper for table */
+            .table-scroll {
+                overflow-x: auto;
+                overflow-y: visible;
+                -webkit-overflow-scrolling: touch;
+                margin: 0 -16px;
+                padding: 0 16px;
+            }
+            .table-scroll::-webkit-scrollbar { height: 2px; }
+            .table-scroll::-webkit-scrollbar-track { background: transparent; }
+            .table-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 1px; }
+
+            table { min-width: 640px; }
+
+            /* Sticky first column — both th and td */
+            thead th:first-child {
+                position: sticky; left: 0; background: #111111; z-index: 4;
+                min-width: 180px;
+            }
+            thead th { padding: 14px 10px 18px; }
+            thead th.price { width: 140px; }
+            thead th.price .plan-name { font-size: 12px; letter-spacing: 1px; }
+            thead th.price .plan-sub { font-size: 9px; }
+
+            td { padding: 14px 10px; font-size: 13px; }
+            td:first-child { min-width: 180px; position: sticky; left: 0; background: #111111; z-index: 3; }
+            tr.category td:first-child { background: #111111; }
+            tr:hover:not(.category) td:first-child { background: #151515; }
+            tr:hover:not(.category) td:first-child.hl { background: #161407; }
+
+            /* Clip pseudo-element dividers on sticky first column */
+            tbody tr:not(.category):not(:last-child) td:first-child::after { display: none; }
+            tbody tr:not(.category):not(:last-child) td:first-child { border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+            /* Remove right-side divider inset */
+            tbody tr:not(.category):not(:last-child) td:last-child::after { right: 0; }
+
+            /* Tooltips: disable hover completely, use JS overlay */
+            .info-badge .tooltip { display: none !important; }
+            .info-badge:hover .tooltip { display: none !important; }
+
+            /* FAQ: single column, clean stacking */
+            .faq-grid-outer { margin-left: 0; margin-right: 0; }
+            .faq-grid-outer::before, .faq-grid-outer::after { display: none; }
+            .faq-row { grid-template-columns: 1fr; }
+            .faq-v-line { display: none; }
+            .faq-row-divider { display: none; }
+            .faq-item { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+            .faq-row:first-of-type .faq-item:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+            .faq-title { font-size: 16px; margin-bottom: 24px; text-align: left; }
+
+            /* Footer */
+            .footer-divider { margin-top: 32px; }
+            .site-footer { flex-direction: column; gap: 12px; align-items: center; padding: 24px 0 36px; }
+            .footer-links { gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="v-line left" id="vLineLeft"></div>
+        <div class="v-line right" id="vLineRight"></div>
+        <div class="v-line-dashed left" id="vLineDashedLeft"></div>
+        <div class="v-line-dashed right" id="vLineDashedRight"></div>
+
+        <div class="container">
+            <h1><span style="color:#fff000">WEBSITE-BETREUUNG</span><br>PREISPAKETE · PRIME</h1>
+            <div class="h-divider top" id="hDivider"></div>
+            
+            <div class="table-scroll">
+            <table>
+                <thead><tr>
+                    <th></th>
+                    <th class="price price-ohne"><span class="plan-name">Ohne Betreuung</span><span class="plan-sub">Kein laufender Support</span></th>
+                    <th class="price hl-head"><span class="plan-name">Starter</span><span class="plan-sub">Ideal für kleine Unternehmen mit bestehender Website</span></th>
+                    <th class="price"><span class="plan-name">Growth</span><span class="plan-sub">Ideal für wachsende Unternehmen mit laufender Optimierung</span></th>
+                </tr></thead>
+                <tbody>
+                    <tr class="category" data-category="details" onclick="toggleCategory('details')"><td><span class="cat-flex">Details<span class="chevron-icon"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg></span></span></td><td class="cat-empty"></td><td class="cat-empty hl"></td><td class="cat-empty"></td></tr>
+                    <tr class="content-row" data-group="details"><td>Preis pro Monat</td><td class="detail-value">—</td><td class="detail-value hl">349€<span class="detail-price-suffix">pro Monat</span></td><td class="detail-value detail-full">899€<span class="detail-price-suffix">pro Monat</span></td></tr>
+                    <tr class="content-row" data-group="details"><td>Mindestlaufzeit</td><td class="detail-value">—</td><td class="detail-value hl">6 <span class="caps">Monate</span></td><td class="detail-value detail-full">6 <span class="caps">Monate</span></td></tr>
+                    <tr class="content-row" data-group="details"><td>Kündigungsfrist</td><td class="detail-value">—</td><td class="detail-value hl">1 <span class="caps">Monat</span></td><td class="detail-value detail-full">1 <span class="caps">Monat</span></td></tr>
+
+                    <tr class="category" data-category="hosting" onclick="toggleCategory('hosting')"><td><span class="cat-flex">Hosting & Technik<span class="chevron-icon"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg></span></span></td><td class="cat-empty"></td><td class="cat-empty hl"></td><td class="cat-empty"></td></tr>
+                    <tr class="content-row" data-group="hosting"><td>Hosting der Website</td><td class="center cross">✕</td><td class="center check hl">✓</td><td class="center check">✓</td></tr>
+                    <tr class="content-row" data-group="hosting"><td><span class="info-wrap">Technische Wartung<span class="info-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg><span class="tooltip">Regelmäßige Updates, Bugfixes und Fehlerbehebung, damit deine Website jederzeit einwandfrei funktioniert.</span></span></span></td><td class="center cross">✕</td><td class="center check hl">✓</td><td class="center check">✓</td></tr>
+                    
+                    <tr class="category" data-category="seo" onclick="toggleCategory('seo')"><td><span class="cat-flex">SEO & Online-Präsenz<span class="chevron-icon"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg></span></span></td><td class="cat-empty"></td><td class="cat-empty hl"></td><td class="cat-empty"></td></tr>
+                    <tr class="content-row" data-group="seo"><td><span class="info-wrap">Monatliches SEO<span class="info-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg><span class="tooltip">Suchmaschinenoptimierung: Verbesserung deiner Google-Platzierung durch Keyword-Analyse, Meta-Tags und technische Optimierungen.</span></span></span></td><td class="center cross">✕</td><td class="center check hl">✓</td><td class="center check">✓</td></tr>
+                    <tr class="content-row" data-group="seo"><td><span class="info-wrap">Google MyBusiness Pflege<span class="info-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg><span class="tooltip">Dein Google-Unternehmensprofil wird aktuell gehalten – Öffnungszeiten, Fotos, Beiträge und Bewertungsmanagement.</span></span></span></td><td class="center cross">✕</td><td class="center check hl">✓</td><td class="center check">✓</td></tr>
+                    
+                    <tr class="category" data-category="content" onclick="toggleCategory('content')"><td><span class="cat-flex">Content & Anpassungen<span class="chevron-icon"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg></span></span></td><td class="cat-empty"></td><td class="cat-empty hl"></td><td class="cat-empty"></td></tr>
+                    <tr class="content-row" data-group="content"><td>Content-Anpassungen (Bilder & Texte)</td><td class="center cross">✕</td><td class="center check hl">✓</td><td class="center check">✓</td></tr>
+                    <tr class="content-row" data-group="content"><td>Einpflegen von Inhalten & Änderungen</td><td class="center cross">✕</td><td class="center check hl">✓</td><td class="center check">✓</td></tr>
+                    <tr class="content-row" data-group="content"><td><span class="info-wrap">1 neue Sektion ODER Redesign/Monat<span class="info-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg><span class="tooltip">Jeden Monat wird ein neuer Bereich auf deiner Website erstellt oder ein bestehender Bereich visuell überarbeitet.</span></span></span></td><td class="center cross">✕</td><td class="center dash hl">—</td><td class="center check">✓</td></tr>
+                    
+                    <tr class="category" data-category="optimierung" onclick="toggleCategory('optimierung')"><td><span class="cat-flex">Optimierung & Testing<span class="chevron-icon"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg></span></span></td><td class="cat-empty"></td><td class="cat-empty hl"></td><td class="cat-empty"></td></tr>
+                    <tr class="content-row" data-group="optimierung"><td><span class="info-wrap">A/B Testing einzelner Sektionen<span class="info-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg><span class="tooltip">Zwei Varianten einer Sektion werden gleichzeitig getestet, um herauszufinden, welche besser bei deinen Besuchern ankommt.</span></span></span></td><td class="center cross">✕</td><td class="center dash hl">—</td><td class="center check">✓</td></tr>
+                    <tr class="content-row" data-group="optimierung"><td><span class="info-wrap">Bildbearbeitung & Color Grading<span class="info-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg><span class="tooltip">Professionelle Nachbearbeitung deiner Bilder – Farbkorrektur, Optimierung für Web und einheitlicher visueller Stil.</span></span></span></td><td class="center cross">✕</td><td class="center dash hl">—</td><td class="center check">✓</td></tr>
+                    
+                    <tr class="category" data-category="support" onclick="toggleCategory('support')"><td><span class="cat-flex">Beratung & Support<span class="chevron-icon"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg></span></span></td><td class="cat-empty"></td><td class="cat-empty hl"></td><td class="cat-empty"></td></tr>
+                    <tr class="content-row" data-group="support"><td>1x Update-Call/Monat (30 Min)</td><td class="center cross">✕</td><td class="center check hl">✓</td><td class="center check">✓</td></tr>
+                    <tr class="content-row" data-group="support"><td>Beratung zu Inhalten & Marketingstrategien</td><td class="center cross">✕</td><td class="center check hl">✓</td><td class="center check">✓</td></tr>
+                    <tr class="content-row" data-group="support"><td>Support via Email</td><td class="center cross">✕</td><td class="center check hl">✓</td><td class="center check">✓</td></tr>
+                    <tr class="content-row" data-group="support"><td>Support via WhatsApp</td><td class="center cross">✕</td><td class="center dash hl">—</td><td class="center check">✓</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="h-divider bottom" id="hDividerBottom"></div>
+
+            <div class="faq-section" id="faqSection">
+                <h2 class="faq-title">Häufig gestellte Fragen</h2>
+
+                <div class="faq-grid-outer" id="faqGridOuter">
+                    <!-- Single absolute v-line spanning entire FAQ grid, managed by JS -->
+                    <div class="faq-v-line" id="faqVLine"></div>
+
+                    <!-- Row 1 -->
+                    <div class="faq-row">
+                        <div class="faq-item" onclick="toggleFaq(this)">
+                            <div class="faq-question"><span>Was passiert nach der Mindestlaufzeit?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg></div></div>
+                            <div class="faq-answer"><div class="faq-answer-inner"><div class="faq-answer-text">Nach Ablauf der 6-monatigen Mindestlaufzeit geht der Vertrag in eine monatliche Laufzeit über. Du kannst dann jederzeit mit einer Frist von einem Monat kündigen – ganz flexibel und ohne langfristige Bindung.</div></div></div>
+                        </div>
+                        <div class="faq-item" onclick="toggleFaq(this)">
+                            <div class="faq-question"><span>Kann ich zwischen den Paketen wechseln?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg></div></div>
+                            <div class="faq-answer"><div class="faq-answer-inner"><div class="faq-answer-text">Ja, ein Wechsel zwischen Starter und Growth ist jederzeit möglich. Ein Upgrade wird sofort aktiv, ein Downgrade tritt zum nächsten Abrechnungszeitraum in Kraft.</div></div></div>
+                        </div>
+                    </div>
+
+                    <div class="faq-row-divider"></div>
+
+                    <!-- Row 2 -->
+                    <div class="faq-row">
+                        <div class="faq-item" onclick="toggleFaq(this)">
+                            <div class="faq-question"><span>Was genau beinhaltet „Monatliches SEO"?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg></div></div>
+                            <div class="faq-answer"><div class="faq-answer-inner"><div class="faq-answer-text">Das monatliche SEO umfasst Keyword-Recherche, Optimierung von Meta-Tags und Seitentiteln, technische SEO-Checks, Ladezeit-Optimierung und eine monatliche Auswertung deiner Google-Rankings mit konkreten Empfehlungen.</div></div></div>
+                        </div>
+                        <div class="faq-item" onclick="toggleFaq(this)">
+                            <div class="faq-question"><span>Ist das Hosting bei euch inklusive?</span><div class="faq-toggle"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg></div></div>
+                            <div class="faq-answer"><div class="faq-answer-inner"><div class="faq-answer-text">Ja, beide Pakete enthalten vollständiges Hosting deiner Website. Wir kümmern uns um Server, SSL-Zertifikate, Backups und technische Sicherheit – du musst dich um nichts kümmern.</div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-divider" id="footerDivider"></div>
+            <footer class="site-footer">
+                <div class="footer-links">
+                    <a href="https://prime-marketing.com/impressum" target="_blank">Impressum</a>
+                    <a href="https://prime-marketing.com/datenschutzerklarung" target="_blank">Datenschutz</a>
+                </div>
+                <div class="footer-copy">© 2026 PRIME Marketing</div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        function toggleCategory(group) {
+            const catRow = document.querySelector(`tr[data-category="${group}"]`);
+            const rows = document.querySelectorAll(`tr[data-group="${group}"]`);
+            catRow.classList.toggle('collapsed');
+            rows.forEach(r => r.classList.toggle('hidden'));
+            animateLines();
+        }
+
+        function toggleFaq(item) {
+            const wasOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+            if (!wasOpen) item.classList.add('open');
+            // Animate lines smoothly during the CSS transition
+            animateLines();
+        }
+
+        let animFrame = null;
+        function animateLines() {
+            const start = performance.now();
+            const duration = 400; // slightly longer than 300ms transition
+            function step() {
+                positionLines();
+                if (performance.now() - start < duration) {
+                    animFrame = requestAnimationFrame(step);
+                }
+            }
+            if (animFrame) cancelAnimationFrame(animFrame);
+            animFrame = requestAnimationFrame(step);
+        }
+
+        function positionLines() {
+            const wrapper = document.querySelector('.page-wrapper');
+            const hDivider = document.getElementById('hDivider');
+            const hDividerBottom = document.getElementById('hDividerBottom');
+            const footerDiv = document.getElementById('footerDivider');
+            const faqVLine = document.getElementById('faqVLine');
+            const faqOuter = document.getElementById('faqGridOuter');
+            const wrapperRect = wrapper.getBoundingClientRect();
+            const startY = hDivider.getBoundingClientRect().top - wrapperRect.top;
+            const bottomDivY = hDividerBottom.getBoundingClientRect().top - wrapperRect.top;
+            const footerY = footerDiv.getBoundingClientRect().top - wrapperRect.top;
+
+            // Solid lines: h1 divider → footer divider
+            ['vLineLeft','vLineRight'].forEach(id => {
+                const el = document.getElementById(id);
+                el.style.top = startY + 'px';
+                el.style.height = (footerY - startY) + 'px';
+            });
+            // Dashed: h1 divider → bottom table divider
+            ['vLineDashedLeft','vLineDashedRight'].forEach(id => {
+                const el = document.getElementById(id);
+                el.style.top = startY + 'px';
+                el.style.height = (bottomDivY - startY) + 'px';
+            });
+
+            // FAQ vertical center line: only span the grid boxes height
+            if (faqOuter && faqVLine) {
+                const outerH = faqOuter.offsetHeight;
+                faqVLine.style.top = '0';
+                faqVLine.style.height = outerH + 'px';
+            }
+        }
+
+        // Mobile tooltip: tap to show overlay, close on scroll or tap elsewhere
+        (function() {
+            if (!('ontouchstart' in window) && window.innerWidth > 768) return;
+
+            var overlay = document.createElement('div');
+            overlay.id = 'mobileTooltip';
+            overlay.style.cssText = 'display:none;position:fixed;left:16px;right:16px;padding:14px 18px;background:#1e1e1e;color:#bbb;border:1px solid #2a2a2a;border-radius:10px;font-size:13px;line-height:1.6;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.5);';
+            document.body.appendChild(overlay);
+
+            function hideTooltip() { overlay.style.display = 'none'; }
+
+            document.addEventListener('click', function(e) {
+                var badge = e.target.closest('.info-badge');
+                if (badge) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var text = badge.querySelector('.tooltip').textContent;
+                    var rect = badge.getBoundingClientRect();
+                    overlay.textContent = text;
+                    overlay.style.display = 'block';
+                    var top = rect.bottom + 12;
+                    if (top + 100 > window.innerHeight) {
+                        overlay.style.bottom = (window.innerHeight - rect.top + 12) + 'px';
+                        overlay.style.top = 'auto';
+                    } else {
+                        overlay.style.top = top + 'px';
+                        overlay.style.bottom = 'auto';
+                    }
+                } else if (!e.target.closest('#mobileTooltip')) {
+                    hideTooltip();
+                }
+            });
+
+            // Close on any scroll — table scroll, page scroll, touch move
+            document.querySelector('.table-scroll').addEventListener('scroll', hideTooltip);
+            window.addEventListener('scroll', hideTooltip, true);
+            window.addEventListener('touchmove', hideTooltip, { passive: true });
+        })();
+
+        window.addEventListener('DOMContentLoaded', positionLines);
+        window.addEventListener('resize', positionLines);
+    </script>
+</body>
+</html>
