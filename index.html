@@ -136,7 +136,7 @@
         @media print { body { background: white; color: #111; } .v-line, .v-line-dashed { display: none; } }
         @media (max-width: 768px) {
             .page-wrapper { padding: 0 16px; }
-            .v-line.left { left: -4px; } .v-line.right { right: -4px; }
+            .v-line { display: none; }
             .v-line-dashed { display: none; }
 
             h1 { font-size: 32px; letter-spacing: -0.02em; }
@@ -159,6 +159,7 @@
             thead th:first-child {
                 position: sticky; left: 0; background: #111111; z-index: 4;
                 min-width: 180px;
+                box-shadow: 4px 0 8px rgba(0,0,0,0.5);
             }
             thead th { padding: 14px 10px 18px; }
             thead th.price { width: 140px; }
@@ -166,13 +167,14 @@
             thead th.price .plan-sub { font-size: 9px; }
 
             td { padding: 14px 10px; font-size: 13px; }
-            td:first-child { min-width: 180px; position: sticky; left: 0; background: #111111; z-index: 3; }
+            td:first-child { min-width: 180px; position: sticky; left: 0; background: #111111; z-index: 3; box-shadow: 4px 0 8px rgba(0,0,0,0.5); }
             tr.category td:first-child { background: #111111; }
             tr:hover:not(.category) td:first-child { background: #151515; }
             tr:hover:not(.category) td:first-child.hl { background: #161407; }
 
             .info-badge .tooltip { width: 180px; left: 0; transform: none; }
             .info-badge .tooltip::after { left: 12px; transform: none; }
+            .info-badge.active .tooltip { opacity: 1; pointer-events: auto; }
 
             /* FAQ: single column, clean stacking */
             .faq-grid-outer { margin-left: 0; margin-right: 0; }
@@ -356,6 +358,31 @@
 
         window.addEventListener('DOMContentLoaded', positionLines);
         window.addEventListener('resize', positionLines);
+
+        // Mobile tooltip toggle
+        (function() {
+            if (!('ontouchstart' in window) && navigator.maxTouchPoints <= 0) return;
+
+            document.querySelectorAll('.info-badge').forEach(function(badge) {
+                badge.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var wasActive = badge.classList.contains('active');
+                    document.querySelectorAll('.info-badge.active').forEach(function(b) {
+                        b.classList.remove('active');
+                    });
+                    if (!wasActive) badge.classList.add('active');
+                });
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.info-badge')) {
+                    document.querySelectorAll('.info-badge.active').forEach(function(b) {
+                        b.classList.remove('active');
+                    });
+                }
+            });
+        })();
     </script>
 </body>
 </html>
